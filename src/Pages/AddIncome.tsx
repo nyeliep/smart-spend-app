@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { addExpense } from '../services/database';
+import { addIncome } from '../services/database';
 import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 
-export default function AddExpense() {
-  const [category, setCategory] = useState('');
+export default function AddIncome() {
+  const [source, setSource] = useState('');
   const [amount, setAmount] = useState('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [description, setDescription] = useState('');
@@ -13,12 +13,12 @@ export default function AddExpense() {
 
   const handleSave = async () => {
     if (!currentUser) {
-      alert('You must be logged in to add expenses');
+      alert('You must be logged in to add income');
       navigate('/login');
       return;
     }
 
-    if (!category || !amount || !date) {
+    if (!source || !amount || !date) {
       alert('Please fill in all required fields');
       return;
     }
@@ -29,34 +29,33 @@ export default function AddExpense() {
     }
 
     try {
-      await addExpense({
+      await addIncome({
         userId: currentUser.uid,
-        category,
+        source,
         amount: Number(amount),
         date,
-        description: description || category,
+        description,
       });
       navigate('/dashboard');
     } catch (error) {
-      alert('Error adding expense: ' + (error as Error).message);
+      alert('Error adding income: ' + (error as Error).message);
     }
   };
 
   return (
     <div className="p-6 flex flex-col items-center">
-      <h2 className="text-lg font-semibold mb-4">Add Expense</h2>
+      <h2 className="text-lg font-semibold mb-4">Add Income</h2>
       <select
-        value={category}
-        onChange={(e) => setCategory(e.target.value)}
+        value={source}
+        onChange={(e) => setSource(e.target.value)}
         className="border rounded-lg p-2 w-72 mb-2"
       >
-        <option value="">Select Category</option>
-        <option value="Food">Food</option>
-        <option value="Transport">Transport</option>
-        <option value="Stationery">Stationery</option>
-        <option value="Entertainment">Entertainment</option>
-        <option value="Shopping">Shopping</option>
-        <option value="Bills">Bills</option>
+        <option value="">Select Source</option>
+        <option value="Allowance">Allowance</option>
+        <option value="Part-time Job">Part-time Job</option>
+        <option value="Freelance">Freelance</option>
+        <option value="Gift">Gift</option>
+        <option value="Scholarship">Scholarship</option>
         <option value="Other">Other</option>
       </select>
       <input
@@ -82,9 +81,9 @@ export default function AddExpense() {
       <div className="flex gap-2">
         <button
           onClick={handleSave}
-          className="bg-primary text-white px-6 py-2 rounded-lg"
+          className="bg-green-600 text-white px-6 py-2 rounded-lg"
         >
-          Save Expense
+          Save Income
         </button>
         <button
           onClick={() => navigate('/dashboard')}

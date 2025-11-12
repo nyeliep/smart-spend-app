@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase';
+import { registerUser } from '../services/auth';
 import { Link, useNavigate } from 'react-router-dom';
 
 export default function Register() {
@@ -15,8 +14,12 @@ export default function Register() {
       alert('Passwords do not match');
       return;
     }
+    if (!name.trim()) {
+      alert('Please enter your name');
+      return;
+    }
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      await registerUser(email, password, name);
       navigate('/dashboard');
     } catch (error) {
       alert('Registration failed: ' + (error as Error).message);
