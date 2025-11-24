@@ -36,18 +36,24 @@ npm run dev
 
 ---
 
-### 🌿 4. Create and push your branches
+### 🌿 4. Push to branches
 ```bash
-git checkout -b dev
-git push -u origin dev
+git checkout dev
+git push origin dev
 
-git checkout -b login
-git push -u origin login
+git checkout login
+git push origin login
 
-git checkout -b dashboard
-git push -u origin dashboard
+git checkout register
+git push origin register
 
-git checkout -b expenses
-git push -u origin expenses
+git checkout dashboard
+git push origin dashboard
+
+git checkout add-expenses
+git push origin expenses
+
+git checkout report
+git push origin report
 
 
