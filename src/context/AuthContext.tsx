@@ -4,6 +4,8 @@ import { onAuthChange, getUserProfile } from '../services/auth';
 import type { User } from '../types';
 import { AuthContext } from './context';
 
+
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<FirebaseUser | null>(null);
   const [userProfile, setUserProfile] = useState<User | null>(null);

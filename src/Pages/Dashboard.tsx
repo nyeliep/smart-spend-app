@@ -4,6 +4,29 @@ import { useAuth } from '../hooks/useAuth';
 import type { Expense, Income } from '../types';
 import { useNavigate } from 'react-router-dom';
 import { logoutUser } from '../services/auth';
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+
+const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#8dd1e1', '#d084d0', '#ffb3ba'];
+
+function generateExpensePieData(expenses: Expense[]) {
+  const now = new Date();
+  const month = now.getMonth();
+  const year = now.getFullYear();
+
+  const categoryMap: Record<string, number> = {};
+
+  expenses.forEach(exp => {
+    const date = new Date(exp.date);
+    if (date.getMonth() === month && date.getFullYear() === year) {
+      categoryMap[exp.category] = (categoryMap[exp.category] || 0) + exp.amount;
+    }
+  });
+
+  return Object.entries(categoryMap).map(([category, amount]) => ({
+    category,
+    amount,
+  }));
+}
 
 export default function Dashboard() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
@@ -102,7 +125,7 @@ export default function Dashboard() {
 </h2>
 
 
-        <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2">
+        <div className=" flex flex-col sm:flex-row items-end sm:items-center gap-2">
           <div className="hidden sm:flex gap-2">
             <button
               onClick={() => navigate('/add-expense')}
@@ -116,6 +139,8 @@ export default function Dashboard() {
             >
               + Income
             </button>
+   
+
             <button
               onClick={handleLogout}
               className="bg-red-600 text-white px-3 py-1 rounded-lg"
@@ -158,6 +183,13 @@ export default function Dashboard() {
                   + Income
                 </button>
                 <button
+  onClick={() => { navigate('/report'); setMenuOpen(false); }}
+  className="bg-blue-600 text-white px-3 py-1 rounded-lg w-full text-left"
+>
+  View Report
+</button>
+
+                <button
                   onClick={() => { handleLogout(); setMenuOpen(false); }}
                   className="bg-red-600 text-white px-3 py-1 rounded-lg w-full text-left"
                 >
@@ -170,16 +202,16 @@ export default function Dashboard() {
       </div>
 
       {/* Balance & totals grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        <div className="bg-white shadow p-4 rounded-xl text-center">
+      <div className=" grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <div className="bg-blue-100 shadow p-4 rounded-xl text-center">
           <p className="text-gray-500 text-sm">Balance</p>
           <p className="text-xl font-semibold">ksh {balance.toFixed(2)}</p>
         </div>
-        <div className="bg-white shadow p-4 rounded-xl text-center">
+        <div className="bg-green-100 shadow p-4 rounded-xl text-center">
           <p className="text-gray-500 text-sm">Total income</p>
           <p className="font-semibold">ksh {totalIncome.toFixed(2)}</p>
         </div>
-        <div className="bg-white shadow p-4 rounded-xl text-center">
+        <div className="bg-yellow-100 shadow p-4 rounded-xl text-center">
           <p className="text-gray-500 text-sm">Total expenses</p>
           <p className="font-semibold">ksh {totalExpenses.toFixed(2)}</p>
         </div>
@@ -229,6 +261,47 @@ export default function Dashboard() {
       <p className="text-gray-800 text-sm text-center">{tip.text}</p>
     </div>
   ))}
+</div>
+
+
+{/* Report Section */}
+<h3 className="font-medium mb-2 mt-6">Monthly Report Preview</h3>
+<div className="bg-white shadow p-4 rounded-xl">
+  <p className="text-gray-500 text-sm mb-2 text-center">
+    Distribution of your expenses by category this month
+  </p>
+
+  <div className="w-full h-64">
+    <ResponsiveContainer width="100%" height="100%">
+      <PieChart>
+        <Pie
+          data={generateExpensePieData(expenses)}
+          dataKey="amount"
+          nameKey="category"
+          cx="50%"
+          cy="50%"
+          outerRadius={80}
+          fill="#8884d8"
+          label
+        >
+          {generateExpensePieData(expenses).map((entry, index) => (
+            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+          ))}
+        </Pie>
+        <Tooltip />
+        <Legend />
+      </PieChart>
+    </ResponsiveContainer>
+  </div>
+
+  <div className="mt-4 text-center">
+    <button
+      onClick={() => navigate('/report')}
+      className="bg-blue-600 text-white px-4 py-2 rounded-lg"
+    >
+      View Full Report
+    </button>
+  </div>
 </div>
 
 
