@@ -6,11 +6,14 @@ import { vi } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import { act } from '@testing-library/react';
 
-// ----- Mock useAuth hook properly -----
+
+
+
+
 vi.mock('../hooks/useAuth');
 const mockedUseAuth = vi.mocked(useAuth, true);
 
-// ----- Mock react-router-dom navigation -----
+
 const mockNavigate = vi.fn();
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual<any>('react-router-dom');
@@ -20,7 +23,6 @@ vi.mock('react-router-dom', async () => {
   };
 });
 
-// ----- Mock database subscriptions -----
 vi.mock('../services/database', () => ({
   subscribeToExpenses: vi.fn((_uid, cb) => {
     cb([{ id: 'e1', category: 'Food', amount: 100, date: new Date().toISOString() }]);
@@ -32,7 +34,7 @@ vi.mock('../services/database', () => ({
   }),
 }));
 
-// ----- Mock auth services -----
+
 vi.mock('../services/auth', () => ({
   logoutUser: vi.fn(() => Promise.resolve()),
 }));
@@ -41,7 +43,7 @@ describe('Dashboard Integration', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    // Correctly mock the hook return value
+    
     mockedUseAuth.mockReturnValue({
       currentUser: { uid: '123', displayName: 'John Doe', email: 'john@example.com' },
       userProfile: { name: 'John' },
