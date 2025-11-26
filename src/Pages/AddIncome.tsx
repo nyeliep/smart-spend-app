@@ -28,6 +28,8 @@ export default function AddIncome() {
       return;
     }
 
+    if (!currentUser?.uid) return; 
+
     try {
       await addIncome({
         userId: currentUser.uid,

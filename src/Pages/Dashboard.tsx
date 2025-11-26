@@ -63,7 +63,7 @@ export default function Dashboard() {
  
 
   useEffect(() => {
-    if (!currentUser) {
+  if (!currentUser || !currentUser.uid) {
       navigate('/login');
       return;
     }
@@ -72,7 +72,7 @@ export default function Dashboard() {
     let currentExpenseTotal = 0;
     let currentIncomeTotal = 0;
 
-    const unsubscribeExpenses = subscribeToExpenses(currentUser.uid, (expenseList) => {
+    const unsubscribeExpenses = subscribeToExpenses(currentUser!.uid, (expenseList) => {
       setExpenses(expenseList);
       currentExpenseTotal = expenseList.reduce((sum, exp) => sum + exp.amount, 0);
       setTotalExpenses(currentExpenseTotal);

@@ -33,7 +33,10 @@ export default function Report() {
     const fetchData = async () => {
       try {
         setLoading(true);
+        if (!currentUser?.uid) return;
+
         const expenses = await getUserExpenses(currentUser.uid);
+
 
         const today = new Date();
         const lastWeek = new Date(today);

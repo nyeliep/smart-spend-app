@@ -28,6 +28,8 @@ export default function AddExpense() {
       return;
     }
 
+    if (!currentUser?.uid) return; 
+
     try {
       await addExpense({
         userId: currentUser.uid,
