@@ -1,0 +1,13 @@
+{
+  "entryPoints": ["src"],
+  "entryPointStrategy": "expand",
+  "out": "docs/api",
+  "exclude": ["**/*.test.ts", "**/*.stories.tsx"],
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeExternals": true,
+  "plugin": ["typedoc-plugin-markdown"],
+  "hideGenerator": true,
+  "theme": "default"
+}
+
